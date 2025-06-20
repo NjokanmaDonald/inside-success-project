@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+//registered users
+model User {
+  id             String           @id @default(uuid())
+  firstName      String
+  lastName       String
+  email          String           @unique
+  password       String
+  decisionRoom   DecisionRoom[]
+  roomMembership RoomMembership[]
+  voteTracker    VoteTracker[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+// room created by a registered user to vote
+model DecisionRoom {
+  id             String           @id @default(uuid())
+  title          String
+  description    String
+  votingOptions  String[] //options
+  deadline       DateTime // deadline for voting
+  roomUrl        String? //unique url for the room
+  createdBy      User             @relation(fields: [createdById], references: [id])
+  createdById    String
+  roomMembership RoomMembership[]
+  votes          Vote[]
+  voteTracker    VoteTracker[]
+  comments       Comment[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model RoomMembership {
+  id             String       @id @default(uuid())
+  user           User?        @relation(fields: [userId], references: [id])
+  userId         String?
+  decisionRoom   DecisionRoom @relation(fields: [decisionRoomId], references: [id])
+  decisionRoomId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+//votes for a particular room
+model Vote {
+  id             String       @id @default(uuid())
+  decisionRoom   DecisionRoom @relation(fields: [decisionRoomId], references: [id])
+  decisionRoomId String
+  votingOption   String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+//to track people that have voted and where they have voted without tracking the option they chose
+model VoteTracker {
+  id                 String       @id @default(uuid())
+  registeredUsers    User?        @relation(fields: [userId], references: [id])
+  userId             String?
+  unregisteredUserId String?
+  DecisionRoom       DecisionRoom @relation(fields: [decisionRoomId], references: [id])
+  decisionRoomId     String
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  @@unique([userId, decisionRoomId])
+  @@unique([unregisteredUserId, decisionRoomId])
+}
+
+model Comment {
+  id             String       @id @default(uuid())
+  user           String
+  comment        String
+  replies        Reply[]
+  DecisionRoom   DecisionRoom @relation(fields: [decisionRoomId], references: [id])
+  decisionRoomId String
+  createdAt      DateTime     @default(now())
+}
+
+model Reply {
+  id        String   @id @default(uuid())
+  user      String
+  reply     String
+  comment   Comment  @relation(fields: [commentId], references: [id])
+  commentId String
+  createdAt DateTime @default(now())
+}

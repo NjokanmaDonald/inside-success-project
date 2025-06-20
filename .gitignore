@@ -1,0 +1,11 @@
+# Ignore backend node_modules
+server/node_modules
+server/.env
+
+# Ignore frontend .next and node_modules
+client/node_modules
+client/.next
+client/.env.local
+
+# System
+.DS_Store
