@@ -12,7 +12,7 @@ export default function Home() {
     if (user) {
       logout(); // Call logout if user is authenticated
     } else {
-      router.push("/signin"); // Navigate to sign-in page
+      router.push("/login"); // Navigate to sign-in page
     }
   };
 
