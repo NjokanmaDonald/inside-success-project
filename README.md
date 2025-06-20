@@ -56,7 +56,7 @@ cors – for cross-origin API access
 
 Render – for deployment
 
- Deployment Links
-Frontend: [https://your-frontend-url.com](https://inside-success-1hg5.vercel.app/rooms)
+Deployment Links
+Frontend: [https://your-frontend-url.com](https://inside-success-project.vercel.app/)
 
-Backend: [https://your-backend-url.com](https://inside-success.onrender.com)
+Backend: [https://your-backend-url.com](https://inside-success-project.onrender.com)

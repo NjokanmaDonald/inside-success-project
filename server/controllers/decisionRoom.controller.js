@@ -34,7 +34,7 @@ const createDecisionRoom = async (req, res) => {
     await prisma.decisionRoom.update({
       where: { id: newDecisionRoom.id },
       data: {
-        roomUrl: `https://inside-success-1hg5.vercel.app/rooms/${newDecisionRoom.id}`,
+        roomUrl: `https://inside-success-project.vercel.app/rooms/${newDecisionRoom.id}`,
       },
     });
 
